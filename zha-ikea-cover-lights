@@ -14,7 +14,7 @@ blueprint:
       selector:
         device:
           integration: zha
-          manufacturer: "\x02KE"
+          manufacturer: "IKEA of Sweden"
           model: "TRADFRI open/close remote"
     light:
       name: Light

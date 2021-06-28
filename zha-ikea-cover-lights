@@ -22,6 +22,13 @@ blueprint:
         target:
           entity:
             domain: light
+    switch:
+      name: Switch
+      description: The switches to control
+      selector:
+        target:
+          entity:
+            domain: switch
 trigger:
 - platform: event
   event_type: zha_event
@@ -34,14 +41,20 @@ action:
     sequence:
     - service: light.turn_on
       target: !input light
+    - service: switch.turn_on
+      target: !input switch
   - conditions:
     - '{{ trigger.event.data.command == "down_close" }}'
     sequence:
     - service: light.turn_off
       target: !input light
+    - service: switch.turn_off
+      target: !input switch      
   - conditions:
     - '{{ trigger.event.data.command in ("stop", "stop_opening", "stop_closing") }}'
     sequence:
     - service: light.turn_off
       target: !input light
+    - service: switch.turn_off
+      target: !input switch      
 mode: restart

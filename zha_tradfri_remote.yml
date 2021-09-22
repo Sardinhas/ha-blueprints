@@ -17,35 +17,45 @@ blueprint:
       selector:
         target:
           entity:
-            domain: light
+            domain: 
+              - light
+              - switch
     light_up:
       name: Light
       description: Up Button
       selector:
         target:
           entity:
-            domain: light
+            domain: 
+              - light
+              - switch
     light_down:
       name: Light
       description: Down Button
       selector:
         target:
           entity:
-            domain: light
+            domain: 
+              - light
+              - switch
     light_left:
       name: Light
       description: Left Button
       selector:
         target:
           entity:
-            domain: light
+            domain: 
+              - light
+              - switch
     light_right:
       name: Light
       description: Right Button
       selector:
         target:
           entity:
-            domain: light
+            domain: 
+              - light
+              - switch
 trigger:
 - platform: event
   event_type: zha_event
@@ -56,26 +66,26 @@ action:
   - conditions:
     - '{{ trigger.event.data.command == "toggle" }}'
     sequence:
-    - service: light.turn_on
+    - service: homeassistant.turn_on
       target: !input light
   - conditions:
     - '{{ trigger.event.data.command == "step_with_on_off" }}'
     sequence:
-    - service: light.turn_on
+    - service: homeassistant.turn_on
       target: !input light_up
   - conditions:
     - '{{ trigger.event.data.command == "step" }}'
     sequence:
-    - service: light.turn_on
+    - service: homeassistant.turn_on
       target: !input light_down
   - conditions:
-    - '{{ trigger.event.data.command == "press" }}'
+    - '{{ trigger.event.data.command == "press" && trigger.event.data.args[0] === 257 }}'
     sequence:
-    - service: light.turn_on
+    - service: homeassistant.turn_on
       target: !input light_left
   - conditions:
-    - '{{ trigger.event.data.command == "press" }}'
+    - '{{ trigger.event.data.command == "press" && trigger.event.data.args[0] === 256 }}'
     sequence:
-    - service: light.turn_on
+    - service: homeassistant.turn_on
       target: !input light_right
 mode: restart

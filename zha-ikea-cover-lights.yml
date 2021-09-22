@@ -1,0 +1,60 @@
+blueprint:
+  name: Light control with Tradfri open/close remote
+  description: |
+    Control a light with an Ikea Tradfri open/close button remote over ZHA
+
+    Short press on ☼ button will turn on the light.
+    Short press on ☰ button will turn off the light.
+    Long press on ☼ or ☰  will turn off the light.
+  domain: automation
+  input:
+    remote:
+      name: Remote
+      description: "IKEA open/close remote to use"
+      selector:
+        device:
+          integration: zha
+          model: "TRADFRI open/close remote"
+    light:
+      name: Light
+      description: The light to control
+      selector:
+        target:
+          entity:
+            domain: light
+    switch:
+      name: Switch
+      description: The switches to control
+      selector:
+        target:
+          entity:
+            domain: switch
+trigger:
+- platform: event
+  event_type: zha_event
+  event_data:
+    device_id: !input remote
+action:
+- choose:
+  - conditions:
+    - '{{ trigger.event.data.command == "up_open" }}'
+    sequence:
+    - service: light.turn_on
+      target: !input light
+    - service: switch.turn_on
+      target: !input switch
+  - conditions:
+    - '{{ trigger.event.data.command == "down_close" }}'
+    sequence:
+    - service: light.turn_off
+      target: !input light
+    - service: switch.turn_off
+      target: !input switch      
+  - conditions:
+    - '{{ trigger.event.data.command in ("stop", "stop_opening", "stop_closing") }}'
+    sequence:
+    - service: light.turn_off
+      target: !input light
+    - service: switch.turn_off
+      target: !input switch      
+mode: restart

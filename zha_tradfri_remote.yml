@@ -14,48 +14,48 @@ blueprint:
     light:
       name: Light
       description: Main Button
+      default:
       selector:
         target:
-          - entity:
-              domain: light
-          - entity:
-              domain: switch
+          entity:
+            domain: light
+          
     light_up:
       name: Light
       description: Up Button
+      default:
       selector:
         target:
-          - entity:
-              domain: light
-          - entity:
-              domain: switch
+          entity:
+            domain: light
+          
     light_down:
       name: Light
       description: Down Button
+      default:
       selector:
         target:
-          - entity:
-              domain: light
-          - entity:
-              domain: switch
+          entity:
+            domain: light
+          
     light_left:
       name: Light
       description: Left Button
+      default:
       selector:
         target:
-          - entity:
-              domain: light
-          - entity:
-              domain: switch
+          entity:
+            domain: switch
+          
     light_right:
       name: Light
       description: Right Button
+      default:
       selector:
         target:
-          - entity:
-              domain: light
-          - entity:
-              domain: switch
+          entity:
+            domain: light
+          
 trigger:
 - platform: event
   event_type: zha_event

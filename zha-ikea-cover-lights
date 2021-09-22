@@ -1,34 +1,61 @@
 blueprint:
-  name: Light control with Tradfri open/close remote
+  name: Light control with Tradfri remote
   description: |
-    Control a light with an Ikea Tradfri open/close button remote over ZHA
-
-    Short press on ☼ button will turn on the light.
-    Short press on ☰ button will turn off the light.
-    Long press on ☼ or ☰  will turn off the light.
+    Turn On/Off several light with one Ikea Tradfri 5 button remote over ZHA
   domain: automation
   input:
     remote:
       name: Remote
-      description: "IKEA open/close remote to use"
+      description: "IKEA 5 button remove to use"
       selector:
         device:
           integration: zha
-          model: "TRADFRI open/close remote"
+          model: "TRADFRI remote control"
     light:
       name: Light
-      description: The light to control
+      description: Main Button
       selector:
         target:
-          entity:
-            domain: light
-    switch:
-      name: Switch
-      description: The switches to control
+          entities:
+            domain: 
+              - light
+              - switch
+    light_up:
+      name: Light
+      description: Up Button
       selector:
         target:
-          entity:
-            domain: switch
+          entities:
+            domain: 
+              - light
+              - switch
+    light_down:
+      name: Light
+      description: Down Button
+      selector:
+        target:
+          entities:
+            domain: 
+              - light
+              - switch
+    light_left:
+      name: Light
+      description: Left Button
+      selector:
+        target:
+          entities:
+            domain: 
+              - light
+              - switch
+    light_right:
+      name: Light
+      description: Right Button
+      selector:
+        target:
+          entities:
+            domain: 
+              - light
+              - switch
 trigger:
 - platform: event
   event_type: zha_event
@@ -37,24 +64,28 @@ trigger:
 action:
 - choose:
   - conditions:
-    - '{{ trigger.event.data.command == "up_open" }}'
+    - '{{ trigger.event.data.command == "toggle" }}'
     sequence:
-    - service: light.turn_on
+    - service: homeassistant.turn_on
       target: !input light
-    - service: switch.turn_on
-      target: !input switch
   - conditions:
-    - '{{ trigger.event.data.command == "down_close" }}'
+    - '{{ trigger.event.data.command == "step_with_on_off" }}'
     sequence:
-    - service: light.turn_off
-      target: !input light
-    - service: switch.turn_off
-      target: !input switch      
+    - service: homeassistant.turn_on
+      target: !input light_up
   - conditions:
-    - '{{ trigger.event.data.command in ("stop", "stop_opening", "stop_closing") }}'
+    - '{{ trigger.event.data.command == "step" }}'
     sequence:
-    - service: light.turn_off
-      target: !input light
-    - service: switch.turn_off
-      target: !input switch      
+    - service: homeassistant.turn_on
+      target: !input light_down
+  - conditions:
+    - '{{ trigger.event.data.command == "press" && trigger.event.data.args[0] === 257 }}'
+    sequence:
+    - service: homeassistant.turn_on
+      target: !input light_left
+  - conditions:
+    - '{{ trigger.event.data.command == "press" && trigger.event.data.args[0] === 256 }}'
+    sequence:
+    - service: homeassistant.turn_on
+      target: !input light_right
 mode: restart

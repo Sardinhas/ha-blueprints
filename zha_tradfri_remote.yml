@@ -68,24 +68,4 @@ action:
     sequence:
     - service: homeassistant.turn_on
       target: !input light
-  - conditions:
-    - '{{ trigger.event.data.command == "step_with_on_off" }}'
-    sequence:
-    - service: homeassistant.turn_on
-      target: !input light_up
-  - conditions:
-    - '{{ trigger.event.data.command == "step" }}'
-    sequence:
-    - service: homeassistant.turn_on
-      target: !input light_down
-  - conditions:
-    - '{{ trigger.event.data.command == "press" && trigger.event.data.args[0] === 257 }}'
-    sequence:
-    - service: homeassistant.turn_on
-      target: !input light_left
-  - conditions:
-    - '{{ trigger.event.data.command == "press" && trigger.event.data.args[0] === 256 }}'
-    sequence:
-    - service: homeassistant.turn_on
-      target: !input light_right
 mode: restart
